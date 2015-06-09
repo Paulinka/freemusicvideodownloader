@@ -796,7 +796,7 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
 
                 var playerUrl = JSON.parse(jsplayer_url_json);
 
-                (function (formatId, url) {
+                (function (encrypted_sig, playerUrl, formatId, url) {
                     queue(function () {
                         return decryptSignature(encrypted_sig, playerUrl).done(function (signature) {
                             url += '&signature=' + signature;
@@ -806,7 +806,7 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
                             });
                         });
                     });
-                })(formatId, url);
+                })(encrypted_sig, playerUrl, formatId, url);
             } else if (url.indexOf('signature') !== -1) { // already decrypted
                 formats.push({
                     format_id: formatId,
