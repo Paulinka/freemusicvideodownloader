@@ -521,7 +521,7 @@ function decryptSignature(s, playerUrl) {
 function parseDashManifest(video_id, dash_manifest_url, player_url, age_gate) {
     var deferred = $.Deferred();
 
-    var r = /\/s\/([\w\.]+)/.exec(dash_manifest_url);
+    var r = /\/s\/([a-fA-F0-9\.]+)/.exec(dash_manifest_url);
 
     if (r !== null) {
         var s = r[1];
