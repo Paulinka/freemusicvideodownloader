@@ -569,6 +569,47 @@ function parseDashManifest(video_id, dash_manifest_url, player_url, age_gate) {
     return deferred.promise();
 }
 
+function getSubtitles(videoId) {
+    var deferred = $.Deferred();
+
+    download('https://video.google.com/timedtext?hl=en&type=list&v=' + videoId).done(function (subsDoc) {
+        subsDoc = $.parseXML(subsDoc);
+
+        var subLangList = {};
+
+        $(subsDoc).find('track').each(function (index, track) {
+            var lang = $(track).attr('lang_code');
+            if (subLangList.hasOwnProperty(lang)) {
+                return;
+            }
+
+            var subFormats = [];
+
+            ['sbv', 'vtt', 'srt'].forEach(function (ext) {
+                var params = $.param({
+                    lang: lang,
+                    v: videoId,
+                    fmt: ext,
+                    name: $(track).attr('name'),
+                });
+
+                subFormats.push({
+                    'url': 'https://www.youtube.com/api/timedtext?' + params,
+                    'ext': ext,
+                });
+            });
+
+            subLangList[lang] = subFormats;
+        });
+
+        deferred.resolve(subLangList);
+    }).fail(function () {
+        deferred.resolve(null);
+    });
+
+    return deferred.promise();
+}
+
 function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_info) {
     var deferred = $.Deferred();
 
@@ -669,8 +710,13 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
     var dislike_count = extract_count('dislike');
 
     // subtitles
+    var videoSubtitles = null;
+    queue(function () {
+        return getSubtitles(video_id).done(function (subs) {
+            videoSubtitles = subs;
+        });
+    });
     // TODO:
-    //video_subtitles = self.extract_subtitles(video_id, video_webpage)
     //automatic_captions = self.extract_automatic_captions(video_id, video_webpage)
 
     var video_duration = null;
@@ -793,7 +839,7 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
             'thumbnail': video_thumbnail,
             //'description': video_description,
             //'categories': video_categories,
-            //'subtitles': video_subtitles,
+            subtitles: videoSubtitles,
             //'automatic_captions': automatic_captions,
             'duration': video_duration,
             'age_limit': age_gate ? 18 : 0,

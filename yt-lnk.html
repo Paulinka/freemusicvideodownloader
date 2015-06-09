@@ -93,6 +93,17 @@
 
                     $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
                 });
+
+                $.each(result.subtitles, function (i, lang) {
+                    $.each(lang, function (j, fmt) {
+                        var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                        var ext = fmt.ext;
+
+                        var extra = i + ' Subtitle';
+
+                        $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+                    });
+                });
             });
         });
 
