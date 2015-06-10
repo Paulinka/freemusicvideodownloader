@@ -559,7 +559,10 @@ function parseDashManifest(video_id, dash_manifest_url, player_url, age_gate) {
                     });
                 });
 
-                deferred.resolve(formats);
+                deferred.resolve({
+                    dash_manifest_url: dash_manifest_url,
+                    formats: formats
+                });
             });
         });
     } else {
@@ -820,6 +823,8 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
         return fail('no conn, hlsvp or url_encoded_fmt_stream_map information found in video info');
     }
 
+    var dashManifestUrl = null;
+
     function buildResult(formats) {
         var size = formats.length;
 
@@ -849,17 +854,21 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
             'like_count': like_count,
             'dislike_count': dislike_count,
             //'average_rating': float_or_none(video_info.get('avg_rating', [None])[0]),
-            'formats': formats
+            'formats': formats,
+            dash_manifest_url: dashManifestUrl
         }
     }
 
     // Look for the DASH manifest
     if (video_info.hasOwnProperty('dashmpd')) {
-        var dashManifestUrl = video_info['dashmpd'][0];
+        dashManifestUrl = video_info['dashmpd'][0];
 
         queue(function () {
-            return parseDashManifest(video_id, dashManifestUrl, playerUrl, age_gate).done(function (fmts) {
-                deferred.resolve(buildResult(fmts ? formats.concat(fmts) : formats));
+            return parseDashManifest(video_id, dashManifestUrl, playerUrl, age_gate).done(function (dash) {
+                if (dash != null) {
+                    dashManifestUrl = dash.dash_manifest_url;
+                }
+                deferred.resolve(buildResult(dash.formats ? formats.concat(dash.formats) : formats));
             });
         });
     }

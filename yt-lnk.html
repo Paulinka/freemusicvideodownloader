@@ -106,6 +106,15 @@
                         });
                     });
                 }
+
+                if (result.dash_manifest_url !== null) {
+                    var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
+                    var ext = 'mpd';
+
+                    var extra = 'DASH manifest';
+
+                    $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+                }
             });
         });
 
