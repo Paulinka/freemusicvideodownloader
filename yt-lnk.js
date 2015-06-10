@@ -868,7 +868,7 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
                 if (dash != null) {
                     dashManifestUrl = dash.dash_manifest_url;
                 }
-                deferred.resolve(buildResult(dash.formats ? formats.concat(dash.formats) : formats));
+                deferred.resolve(buildResult(dash && dash.formats ? formats.concat(dash.formats) : formats));
             });
         });
     }
@@ -907,10 +907,12 @@ function extract(url) {
             age_gate = false;
             var videoInfoUrl = 'https://www.youtube.com/get_video_info?&video_id=' + video_id + '&el=detailpage&ps=default&eurl=&gl=US&hl=en'
             download(videoInfoUrl).done(function (video_info_webpage) {
-                var video_info = parseQS(video_info_webpage);
-                extractSupport(video_id, video_webpage, age_gate, '', video_info).done(function (result) {
+                var videoInfo = parseQS(video_info_webpage);
+                extractSupport(video_id, video_webpage, age_gate, '', videoInfo).done(function (result) {
                     deferred.resolve(result);
                 });
+            }).fail(function () {
+                deferred.resolve(null);
             });
         }
     });
