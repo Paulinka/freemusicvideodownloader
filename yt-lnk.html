@@ -90,6 +90,9 @@
                     var ext = fmt.ext;
 
                     var extra = (fmt.abr ? (fmt.abr + 'k') : '') + (fmt.height ? (fmt.height + 'p') : '') + ' ' + (fmt.format_note ? fmt.format_note : '');
+                    if (fmt.format_note && fmt.format_note.indexOf('DASH video') != -1) {
+                        extra = extra + ' (no audio)';
+                    }
 
                     $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
                 });
