@@ -470,6 +470,34 @@ function decryptSignature(s, playerUrl) {
 
                 var funcname = r[1];
 
+                function shortcut(jscode) {
+                    var p = jscode.split('function ' + funcname + '(');
+                    if (p.length !== 2) {
+                        return null;
+                    }
+
+                    var i1 = p[0].lastIndexOf('};var ');
+                    if (i1 === -1) {
+                        return null;
+                    }
+
+                    var p1 = p[0].substr(i1 + 2);
+
+                    var i2 = p[1].indexOf('};');
+                    if (i2 === -1) {
+                        return null;
+                    }
+
+                    var p2 = p[1].substr(0, i2 + 2);
+
+                    return p1 + 'function ' + funcname + '(' + p2;
+                }
+
+                var s = shortcut(jscode);
+                if (s !== null) {
+                    jscode = s;
+                }
+
                 var ast = esprima.parse(jscode);
 
                 function traverse(object, level, visitor) {
