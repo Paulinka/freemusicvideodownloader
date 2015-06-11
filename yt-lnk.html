@@ -98,13 +98,14 @@
                 $("#btn_links").prop('disabled', false);
                 $("#btn_links").text('Links');
 
-                $('<tr>').html('<td colspan="2">Title: ' + result.title + '</td>').appendTo('#tbl_result');
-                $('<tr>').html('<td colspan="2">Note: Right click for save as </td>').appendTo('#tbl_result');
+                $('<tr>').html('<td colspan="3">Title: ' + result.title + '</td>').appendTo('#tbl_result');
+                $('<tr>').html('<td colspan="3">Note: Right click for save as </td>').appendTo('#tbl_result');
 
-                $('<tr>').html("<td></td><td>Type</td><td>Extra</td>").appendTo('#tbl_result');
+                $('<tr>').html("<td></td><td>Open</td><td>Type</td><td>Extra</td>").appendTo('#tbl_result');
 
                 $.each(result.formats, function (i, fmt) {
                     var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                    var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
                     var ext = fmt.ext;
 
                     var extra = (fmt.abr ? (fmt.abr + 'k') : '') + (fmt.height ? (fmt.height + 'p') : '') + ' ' + (fmt.format_note ? fmt.format_note : '');
@@ -112,18 +113,19 @@
                         extra = extra + ' (no audio)';
                     }
 
-                    $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+                    $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
                 });
 
                 if (result.subtitles !== null) {
                     $.each(result.subtitles, function (i, lang) {
                         $.each(lang, function (j, fmt) {
                             var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                            var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
                             var ext = fmt.ext;
 
                             var extra = i + ' Subtitle';
 
-                            $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+                            $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
                         });
                     });
                 }
