@@ -948,3 +948,41 @@ function search(q) {
 
     return deferred.promise();
 }
+
+function ytAutocompleteSource(request, response) {
+
+    // setup global object
+    if (typeof google === 'undefined') {
+        google = {
+            sbox: {
+                p50: function (data) {
+                    data = data[1];
+                    var result = [];
+                    var size = data.length;
+                    for (var i = 0; i < size; i++) {
+                        result.push(data[i][0]);
+                    }
+                    google.sbox.response(result);
+                },
+                response: function (data) {
+                    log(data)
+                }
+            }
+        }
+    }
+
+    // set global response
+    google.sbox.response = response;
+
+    $.ajax({
+        url: 'https://clients1.google.com/complete/search?client=youtube&hl=en&gl=us&gs_rn=23&gs_ri=youtube&ds=yt&cp=2&gs_id=8',
+        dataType: 'script',
+        data: {
+            q: request.term,
+            callback: 'google.sbox.p50'
+        },
+        success: function (data) {
+            // ignore
+        }
+    });
+}
