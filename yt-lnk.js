@@ -729,17 +729,6 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
     // description
     // TODO:
 
-    function extract_count(count_name) {
-        var count = searchRegex(new RegExp('id="watch-' + count_name + '"[^>]*>.*?([\d,]+)\s*<\/span>'), video_webpage, null);
-        if (count !== null) {
-            return parseInt(count.replace(',', ''));
-        }
-        return null;
-    }
-
-    var like_count = extract_count('like');
-    var dislike_count = extract_count('dislike');
-
     // subtitles
     var videoSubtitles = null;
     queue(function () {
@@ -879,8 +868,6 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
             //'annotations': video_annotations,
             'webpage_url': 'https://www.youtube.com/watch?v=' + video_id,
             'view_count': view_count,
-            'like_count': like_count,
-            'dislike_count': dislike_count,
             //'average_rating': float_or_none(video_info.get('avg_rating', [None])[0]),
             'formats': formats,
             dash_manifest_url: dashManifestUrl

@@ -151,10 +151,6 @@
         });
     });
 
-    function getLinksButton(url) {
-        return '<button onclick="getLinks(\'' + url + '\')" class="btn btn-default">Get Links</button>';
-    }
-
     function getLinks(url) {
         $('#txt_video_url').val(url);
         $('#btn_links').click();
