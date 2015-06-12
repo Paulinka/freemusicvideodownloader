@@ -498,9 +498,9 @@ function decryptSignature(s, playerUrl) {
                     return p1 + 'function ' + funcname + '(' + p2;
                 }
 
-                var s = shortcut(jscode);
-                if (s !== null) {
-                    jscode = s;
+                var temp = shortcut(jscode);
+                if (temp !== null) {
+                    jscode = temp;
                 }
 
                 var ast = esprima.parse(jscode);
