@@ -61,26 +61,6 @@
 </div>
 <script type="application/javascript">
 
-    $('#txt_keywords').bind("keydown", function (event) {
-        if (event.keyCode === $.ui.keyCode.ENTER) {
-            doSearch();
-
-            $('#txt_keywords').autocomplete("close");
-        }
-    }).autocomplete({
-        minLength: 2,
-        source: ytAutocompleteSource,
-        select: function (event, ui) {
-            doSearch(ui.item.value);
-        },
-        open: function () {
-            $(this).data("selectVisible", true);
-        },
-        close: function () {
-            $(this).data("selectVisible", false);
-        }
-    });
-
     function submitSearch(keywords) {
         var btn = $('#btn_search');
         var tbl = $('#tbl_results');
@@ -124,6 +104,8 @@
 
         $('#main_results').hide();
         $('#main_links').show();
+
+        $('#txt_keywords').val(url);
 
         btn.prop('disabled', true);
         btn.text('Wait...');
@@ -189,6 +171,20 @@
             submitLinks(s);
         }
     }
+
+    $('#txt_keywords').bind("keydown", function (event) {
+        if (event.keyCode === $.ui.keyCode.ENTER) {
+            doSearch();
+            $('#txt_keywords').autocomplete("close");
+        }
+    }).autocomplete({
+        minLength: 2,
+        source: ytAutocompleteSource,
+        select: function (event, ui) {
+            $('#txt_keywords').val(ui.item.value);
+            $('#btn_search').click();
+        }
+    });
 
     $('#btn_search').click(doSearch);
 
