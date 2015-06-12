@@ -700,18 +700,6 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
         return fail('Unable to extract video title');
     }
 
-    // thumbnail image
-    // We try first to get a high quality image:
-    var video_thumbnail = null;
-    var m_thumb = /<span itemprop="thumbnail".*?href="(.*?)">/.exec(video_webpage);
-    if (m_thumb !== null) {
-        video_thumbnail = m_thumb[1];
-    } else if (!video_info.hasOwnProperty('thumbnail_url')) {
-        return fail('unable to extract video thumbnail');
-    } else {
-        video_thumbnail = decodeURIComponent(video_info['thumbnail_url'][0]);
-    }
-
     // upload date
     var upload_date = null;
     mobj = /id="eow-date.*?>(.*?)<\/span>/.exec(video_webpage);
@@ -858,7 +846,7 @@ function extractSupport(video_id, video_webpage, age_gate, embed_webpage, video_
             'uploader_id': video_uploader_id,
             'upload_date': upload_date,
             'title': video_title,
-            'thumbnail': video_thumbnail,
+            'thumbnail': 'https://i.ytimg.com/vi/' + video_id + '/hqdefault.jpg',
             //'description': video_description,
             //'categories': video_categories,
             subtitles: videoSubtitles,
@@ -954,7 +942,7 @@ function search(q) {
                 duration: m[3],
                 user: m[4],
                 views: parseInt(m[5].replace(/,/g, ''), 10),
-                thumb: 'https://i.ytimg.com/vi/' + m[1] + '/mqdefault.jpg',
+                thumbnail: 'https://i.ytimg.com/vi/' + m[1] + '/mqdefault.jpg',
             };
 
             results.push(r);

@@ -178,13 +178,13 @@
             log(results);
 
             $.each(results, function (i, r) {
-                var thumb = '<img class="img-responsive" src="' + r.thumb + '" alt="' + r.title + '"/>';
+                var thumbnail = '<img class="img-responsive" src="' + r.thumbnail + '" alt="' + r.title + '"/>';
                 var title = '<strong><a target="_blank" href="' + r.url + '">' + r.title + '</a></strong>';
                 var duration = ' - ' + r.duration;
                 var by = '<div class="small">by <a target="_blank" href="https://www.youtube.com/user/' + r.user + '">' + r.user + '</a></div>';
                 var views = '<div class="small">' + r.views.toLocaleString() + ' views</div>';
                 var btn = '<button class="btn btn-default" type="button" onclick="getLinks(\'' + r.url + '\')">Get Links</button>';
-                var html = thumb + title + duration + by + views + btn;
+                var html = thumbnail + title + duration + by + views + btn;
                 $('<div>').prop('class', 'col-xs-12 col-md-4 result-box').html(html).appendTo(tbl);
             });
         });
