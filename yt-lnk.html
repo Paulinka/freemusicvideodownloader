@@ -9,7 +9,7 @@
     <script src="https://cdn.rawgit.com/jquery/esprima/2.2.0/esprima.js"></script>
     <script src="https://cdn.rawgit.com/estools/escodegen/1.6.1/escodegen.browser.min.js"></script>
     <script src="yt-lnk.js"></script>
-    <!-- for UI -->
+    <!-- for ui -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -26,17 +26,24 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <h3>Enter keywords or YouTube video link</h3>
-    <input type="text" id="txt_keywords" size="50"/>
-    <button type="button" id="btn_search" class="btn btn-default">Search</button>
-    <br/>
-    <br/>
-    <input type="text" id="txt_video_url" size="50" placeholder="https://www.youtube.com/watch?v=######"/>
-    <button type="button" id="btn_links" class="btn btn-default">Links</button>
-    <table id="tbl_result" class="table">
-    </table>
-    <small><a href="https://github.com/aldenml/yt-lnk">Fork me</a></small>
+<div class="container-fluid">
+    <div id="div_title" class="row">
+        <div class="col-xs-4 col-centered"><h1 class="text-center">YouTube Link</h1></div>
+    </div>
+    <div id="div_search" class="row">
+        <div class="col-xs-4 col-centered">
+            <h3>Enter keywords or YouTube video link</h3>
+            <input type="text" id="txt_keywords" size="50"/>
+            <button type="button" id="btn_search" class="btn btn-default">Search</button>
+            <br/>
+            <br/>
+            <input type="text" id="txt_video_url" size="50" placeholder="https://www.youtube.com/watch?v=######"/>
+            <button type="button" id="btn_links" class="btn btn-default">Links</button>
+            <table id="tbl_result" class="table">
+            </table>
+            <small><a href="https://github.com/aldenml/yt-lnk">Fork me</a></small>
+        </div>
+    </div>
 </div>
 <script type="application/javascript">
 
