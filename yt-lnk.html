@@ -149,7 +149,7 @@
             $('<tr>').html('<td colspan="2"></td><th>Ext</th><th>Info</th>').appendTo(tbl);
 
             function mkVlc(url) {
-                return '<a class="btn btn-default" href="vlc://' + url + '">Open</a>';
+                return '<a class="btn btn-default" href="vlc://' + url + '">Open <img src="http://images.videolan.org/images/favicon.ico"/></a>';
             }
 
             $.each(result.formats, function (i, fmt) {
