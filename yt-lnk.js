@@ -935,14 +935,17 @@ function search(q) {
 
         var results = [];
 
+        var videoId = m[1];
+
         while (m = re.exec(html)) {
             var r = {
-                url: 'https://www.youtube.com/watch?v=' + m[1],
+                id: videoId,
+                url: 'https://www.youtube.com/watch?v=' + videoId,
                 title: m[2],
                 duration: m[3],
                 user: m[4],
                 views: parseInt(m[5].replace(/,/g, ''), 10),
-                thumbnail: 'https://i.ytimg.com/vi/' + m[1] + '/mqdefault.jpg',
+                thumbnail: 'https://i.ytimg.com/vi/' + videoId + '/mqdefault.jpg',
             };
 
             results.push(r);
