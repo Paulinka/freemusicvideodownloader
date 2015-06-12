@@ -39,6 +39,10 @@
             text-align: center;
             margin: auto;
         }
+
+        .table tbody > tr > td {
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -144,9 +148,13 @@
             $('<tr>').html('<th class="text-center" colspan="4">' + result.title + '</td>').appendTo(tbl);
             $('<tr>').html('<td colspan="2"></td><th>Ext</th><th>Info</th>').appendTo(tbl);
 
+            function mkVlc(url) {
+                return '<a class="btn btn-default" href="vlc://' + url + '">Open</a>';
+            }
+
             $.each(result.formats, function (i, fmt) {
                 var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
-                var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
+                var vlcLnk = mkVlc(fmt.url);
                 var ext = fmt.ext;
 
                 var extra = (fmt.abr ? (fmt.abr + 'k') : '') + (fmt.height ? (fmt.height + 'p') : '') + ' ' + (fmt.format_note ? fmt.format_note : '');
@@ -159,7 +167,7 @@
 
             if (result.dash_manifest_url !== null) {
                 var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
-                var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
+                var vlcLnk = mkVlc(result.dash_manifest_url);
                 var ext = 'mpd';
                 var info = 'DASH manifest';
 
