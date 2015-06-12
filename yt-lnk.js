@@ -935,9 +935,9 @@ function search(q) {
 
         var results = [];
 
-        var videoId = m[1];
-
         while (m = re.exec(html)) {
+            var videoId = m[1];
+
             var r = {
                 id: videoId,
                 url: 'https://www.youtube.com/watch?v=' + videoId,
