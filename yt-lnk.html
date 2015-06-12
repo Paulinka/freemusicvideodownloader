@@ -76,7 +76,7 @@
     <div id="main_links" class="row top-spacer-20">
         <div class="col-xs-4 col-centered">
             <div class="table-responsive">
-                <table id="tbl_links" class="table">
+                <table id="tbl_links" class="table table-striped">
                 </table>
             </div>
         </div>
@@ -141,9 +141,8 @@
 
             log(result);
 
-            $('<tr>').html('<th colspan="4">' + result.title + '</td>').appendTo(tbl);
-
-            $('<tr>').html("<td></td><td>Open</td><td>Type</td><td>Extra</td>").appendTo(tbl);
+            $('<tr>').html('<th class="text-center" colspan="4">' + result.title + '</td>').appendTo(tbl);
+            $('<tr>').html('<td colspan="2"></td><th>Ext</th><th>Info</th>').appendTo(tbl);
 
             $.each(result.formats, function (i, fmt) {
                 var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
@@ -158,27 +157,25 @@
                 $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo(tbl);
             });
 
+            if (result.dash_manifest_url !== null) {
+                var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
+                var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
+                var ext = 'mpd';
+                var info = 'DASH manifest';
+
+                $('<tr>').html('<td>' + lnk + "</td><td>" + vlcLnk + "</td><td>" + ext + "</td><td>" + info + "</td>").appendTo(tbl);
+            }
+
             if (result.subtitles !== null) {
                 $.each(result.subtitles, function (i, lang) {
                     $.each(lang, function (j, fmt) {
                         var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
-                        var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
                         var ext = fmt.ext;
+                        var info = i + ' Subtitle';
 
-                        var extra = i + ' Subtitle';
-
-                        $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + ext + "</td><td>" + extra + "</td>").appendTo(tbl);
+                        $('<tr>').html('<td colspan="2">' + lnk + '</td><td>' + ext + "</td><td>" + info + "</td>").appendTo(tbl);
                     });
                 });
-            }
-
-            if (result.dash_manifest_url !== null) {
-                var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
-                var ext = 'mpd';
-
-                var extra = 'DASH manifest';
-
-                $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo(tbl);
             }
         });
     }
