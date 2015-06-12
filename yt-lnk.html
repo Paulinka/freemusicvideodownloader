@@ -2,12 +2,14 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>YouTube links</title>
+    <!-- for core -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdn.rawgit.com/jquery/esprima/2.2.0/esprima.js"></script>
     <script src="https://cdn.rawgit.com/estools/escodegen/1.6.1/escodegen.browser.min.js"></script>
     <script src="yt-lnk.js"></script>
-    <!-- just for UI -->
+    <!-- for UI -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -24,134 +26,133 @@
     <button type="button" id="btn_links" class="btn btn-default">Links</button>
     <table id="tbl_result" class="table">
     </table>
-    <script type="application/javascript">
-
-        function submitSearch(keywords) {
-            if ($('#btn_search').prop('disabled')) {
-                return; //busy
-            }
-
-
-            $("#btn_search").prop('disabled', true);
-            $("#btn_search").text('Searching...');
-
-
-            $('#tbl_result').empty()
-
-            search(keywords).done(function (results) {
-                $("#btn_search").prop('disabled', false);
-                $("#btn_search").text('Search');
-
-                log(results);
-
-                $('<tr>').html("<td>Media Links</td><td>Url</td><td>Title</td><td>Duration</td><td>User</td>").appendTo('#tbl_result');
-
-                $.each(results, function (i, r) {
-                    var url = '<a target="_blank" href="' + r.url + '">' + r.url + '</a>';
-                    var title = r.title;
-                    var duration = r.duration;
-                    var user = r.user;
-                    var userPage = '<a href="https://www.youtube.com/user/' + user + '" target="_blank">' + user + '</a>';
-                    $('<tr>').html('<td>' + getLinksButton(r.url) + '</td><td>' + url + '</td><td>' + title + '</td><td>' + duration + '</td><td>' + userPage + '</td>').appendTo('#tbl_result');
-                });
-            });
-        }
-
-        $('#btn_search').click(function () {
-            var keywords = $('#txt_keywords').val().trim();
-            submitSearch(keywords);
-        });
-
-        $('#txt_keywords').bind("keydown", function (event) {
-            if (event.keyCode === $.ui.keyCode.ENTER) {
-                var keywords = $('#txt_keywords').val().trim();
-                submitSearch(keywords);
-
-                $('#txt_keywords').autocomplete("close");
-            }
-        }).autocomplete({
-            minLength: 2,
-            source: ytAutocompleteSource,
-            select: function (event, ui) {
-                submitSearch(ui.item.value);
-            },
-            open: function () {
-                $(this).data("selectVisible", true);
-            },
-            close: function () {
-                $(this).data("selectVisible", false);
-            }
-        });
-
-
-        $("#btn_links").click(function () {
-            $("#btn_links").prop('disabled', true);
-            $("#btn_links").text('Wait...');
-
-            $('#tbl_result').empty()
-
-            var videoUrl = $('#txt_video_url').val().trim();
-
-            extract(videoUrl).done(function (result) {
-                log(result);
-
-                $("#btn_links").prop('disabled', false);
-                $("#btn_links").text('Links');
-
-                $('<tr>').html('<td colspan="3">Title: ' + result.title + '</td>').appendTo('#tbl_result');
-                $('<tr>').html('<td colspan="3">Note: Right click for save as </td>').appendTo('#tbl_result');
-
-                $('<tr>').html("<td></td><td>Open</td><td>Type</td><td>Extra</td>").appendTo('#tbl_result');
-
-                $.each(result.formats, function (i, fmt) {
-                    var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
-                    var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
-                    var ext = fmt.ext;
-
-                    var extra = (fmt.abr ? (fmt.abr + 'k') : '') + (fmt.height ? (fmt.height + 'p') : '') + ' ' + (fmt.format_note ? fmt.format_note : '');
-                    if (fmt.format_note && fmt.format_note.indexOf('DASH video') != -1) {
-                        extra = extra + ' (no audio)';
-                    }
-
-                    $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
-                });
-
-                if (result.subtitles !== null) {
-                    $.each(result.subtitles, function (i, lang) {
-                        $.each(lang, function (j, fmt) {
-                            var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
-                            var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
-                            var ext = fmt.ext;
-
-                            var extra = i + ' Subtitle';
-
-                            $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
-                        });
-                    });
-                }
-
-                if (result.dash_manifest_url !== null) {
-                    var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
-                    var ext = 'mpd';
-
-                    var extra = 'DASH manifest';
-
-                    $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
-                }
-            });
-        });
-
-        function getLinksButton(url) {
-            return '<button onclick="getLinks(\'' + url + '\')" class="btn btn-default">Get Links</button>';
-        }
-
-        function getLinks(url) {
-            $('#txt_video_url').val(url);
-            $('#btn_links').click();
-        }
-    </script>
-
     <small><a href="https://github.com/aldenml/yt-lnk">Fork me</a></small>
 </div>
+<script type="application/javascript">
+
+    function submitSearch(keywords) {
+        if ($('#btn_search').prop('disabled')) {
+            return; //busy
+        }
+
+
+        $("#btn_search").prop('disabled', true);
+        $("#btn_search").text('Searching...');
+
+
+        $('#tbl_result').empty()
+
+        search(keywords).done(function (results) {
+            $("#btn_search").prop('disabled', false);
+            $("#btn_search").text('Search');
+
+            log(results);
+
+            $('<tr>').html("<td>Media Links</td><td>Url</td><td>Title</td><td>Duration</td><td>User</td>").appendTo('#tbl_result');
+
+            $.each(results, function (i, r) {
+                var url = '<a target="_blank" href="' + r.url + '">' + r.url + '</a>';
+                var title = r.title;
+                var duration = r.duration;
+                var user = r.user;
+                var userPage = '<a href="https://www.youtube.com/user/' + user + '" target="_blank">' + user + '</a>';
+                $('<tr>').html('<td>' + getLinksButton(r.url) + '</td><td>' + url + '</td><td>' + title + '</td><td>' + duration + '</td><td>' + userPage + '</td>').appendTo('#tbl_result');
+            });
+        });
+    }
+
+    $('#btn_search').click(function () {
+        var keywords = $('#txt_keywords').val().trim();
+        submitSearch(keywords);
+    });
+
+    $('#txt_keywords').bind("keydown", function (event) {
+        if (event.keyCode === $.ui.keyCode.ENTER) {
+            var keywords = $('#txt_keywords').val().trim();
+            submitSearch(keywords);
+
+            $('#txt_keywords').autocomplete("close");
+        }
+    }).autocomplete({
+        minLength: 2,
+        source: ytAutocompleteSource,
+        select: function (event, ui) {
+            submitSearch(ui.item.value);
+        },
+        open: function () {
+            $(this).data("selectVisible", true);
+        },
+        close: function () {
+            $(this).data("selectVisible", false);
+        }
+    });
+
+
+    $("#btn_links").click(function () {
+        $("#btn_links").prop('disabled', true);
+        $("#btn_links").text('Wait...');
+
+        $('#tbl_result').empty()
+
+        var videoUrl = $('#txt_video_url').val().trim();
+
+        extract(videoUrl).done(function (result) {
+            log(result);
+
+            $("#btn_links").prop('disabled', false);
+            $("#btn_links").text('Links');
+
+            $('<tr>').html('<td colspan="3">Title: ' + result.title + '</td>').appendTo('#tbl_result');
+            $('<tr>').html('<td colspan="3">Note: Right click for save as </td>').appendTo('#tbl_result');
+
+            $('<tr>').html("<td></td><td>Open</td><td>Type</td><td>Extra</td>").appendTo('#tbl_result');
+
+            $.each(result.formats, function (i, fmt) {
+                var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
+                var ext = fmt.ext;
+
+                var extra = (fmt.abr ? (fmt.abr + 'k') : '') + (fmt.height ? (fmt.height + 'p') : '') + ' ' + (fmt.format_note ? fmt.format_note : '');
+                if (fmt.format_note && fmt.format_note.indexOf('DASH video') != -1) {
+                    extra = extra + ' (no audio)';
+                }
+
+                $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+            });
+
+            if (result.subtitles !== null) {
+                $.each(result.subtitles, function (i, lang) {
+                    $.each(lang, function (j, fmt) {
+                        var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                        var vlcLnk = '<a href="vlc://' + fmt.url + '">VLC</a>';
+                        var ext = fmt.ext;
+
+                        var extra = i + ' Subtitle';
+
+                        $('<tr>').html("<td>" + lnk + "</td><td>" + vlcLnk + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+                    });
+                });
+            }
+
+            if (result.dash_manifest_url !== null) {
+                var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
+                var ext = 'mpd';
+
+                var extra = 'DASH manifest';
+
+                $('<tr>').html("<td>" + lnk + "</td><td>" + ext + "</td><td>" + extra + "</td>").appendTo('#tbl_result');
+            }
+        });
+    });
+
+    function getLinksButton(url) {
+        return '<button onclick="getLinks(\'' + url + '\')" class="btn btn-default">Get Links</button>';
+    }
+
+    function getLinks(url) {
+        $('#txt_video_url').val(url);
+        $('#btn_links').click();
+    }
+</script>
 </body>
 </html>
