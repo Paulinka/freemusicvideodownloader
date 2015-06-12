@@ -60,7 +60,7 @@
 </nav>
 <div class="container-fluid">
     <div id="main_search" class="row">
-        <div class="col-xs-4 col-centered">
+        <div class="col-xs-10 col-sm-8 col-md-4 col-centered">
             <div class="input-group">
                 <input id="txt_keywords" type="text" class="form-control"
                        placeholder="Search for ... or YouTube video link"/>
@@ -69,16 +69,16 @@
                 </span>
             </div>
         </div>
-        <div class="col-xs-8 col-centered page-header top-spacer-10">
+        <div class="col-xs-10 col-md-8 col-centered page-header top-spacer-10">
         </div>
     </div>
     <div id="main_results" class="row top-spacer-20">
-        <div class="col-xs-8 col-centered">
+        <div class="col-xs-10 col-md-8 col-centered">
             <div id="tbl_results"></div>
         </div>
     </div>
     <div id="main_links" class="row top-spacer-20">
-        <div class="col-xs-4 col-centered">
+        <div class="col-xs-10 col-md-8 col-centered">
             <div class="table-responsive">
                 <table id="tbl_links" class="table table-striped">
                 </table>
@@ -117,7 +117,7 @@
                 var views = '<div class="small">' + r.views.toLocaleString() + ' views</div>';
                 var btn = '<button class="btn btn-default" type="button" onclick="submitLinks(\'' + r.url + '\')">Get Links</button>';
                 var html = thumbnail + title + duration + by + views + btn;
-                $('<div>').prop('class', 'col-xs-12 col-md-4 result-box').html(html).appendTo(tbl);
+                $('<div>').prop('class', 'col-xs-12 col-sm-6 col-md-4 result-box').html(html).appendTo(tbl);
             });
         });
     }
