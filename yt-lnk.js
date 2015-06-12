@@ -402,7 +402,12 @@ function download(url) {
         env: 'store://datatables.org/alltableswithkeys',
         callback: ''
     }).done(function (data) {
-        deferred.resolve(data.query.results.resources.content);
+        try {
+            deferred.resolve(data.query.results.resources.content);
+        } catch (e) {
+            log(e);
+            deferred.resolve(null);
+        }
     });
 
     return deferred.promise();
