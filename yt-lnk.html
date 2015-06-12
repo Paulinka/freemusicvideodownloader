@@ -20,17 +20,21 @@
             float: none;
         }
 
-        .spacer10 {
+        .top-spacer-10 {
             margin-top: 10px;
+        }
+
+        .result-box {
+            height: 290px;
         }
     </style>
 </head>
 <body>
 <div class="container-fluid">
-    <div id="div_title" class="row">
+    <div id="main_title" class="row">
         <div class="col-xs-4 col-centered"><h1 class="text-center">YouTube Link</h1></div>
     </div>
-    <div id="div_search" class="row spacer10">
+    <div id="main_search" class="row top-spacer-10">
         <div class="col-xs-4 col-centered">
             <div class="input-group">
                 <input id="txt_keywords" type="text" class="form-control"
@@ -42,44 +46,22 @@
             <br/>
             <input type="text" id="txt_video_url" size="50" placeholder="https://www.youtube.com/watch?v=######"/>
             <button type="button" id="btn_links" class="btn btn-default">Links</button>
+            <small><a href="https://github.com/aldenml/yt-lnk">Fork me</a></small>
+        </div>
+    </div>
+    <div id="main_results" class="row">
+        <div class="col-xs-8 col-centered">
+            <div id="tbl_results"></div>
+        </div>
+    </div>
+    <div id="main_links" class="row">
+        <div class="col-xs-4 col-centered">
             <table id="tbl_result" class="table">
             </table>
-            <small><a href="https://github.com/aldenml/yt-lnk">Fork me</a></small>
         </div>
     </div>
 </div>
 <script type="application/javascript">
-
-    function submitSearch(keywords) {
-        if ($('#btn_search').prop('disabled')) {
-            return; //busy
-        }
-
-
-        $("#btn_search").prop('disabled', true);
-        $("#btn_search").text('Searching...');
-
-
-        $('#tbl_result').empty()
-
-        search(keywords).done(function (results) {
-            $("#btn_search").prop('disabled', false);
-            $("#btn_search").text('Search');
-
-            log(results);
-
-            $('<tr>').html("<td>Media Links</td><td>Url</td><td>Title</td><td>Duration</td><td>User</td>").appendTo('#tbl_result');
-
-            $.each(results, function (i, r) {
-                var url = '<a target="_blank" href="' + r.url + '">' + r.url + '</a>';
-                var title = r.title;
-                var duration = r.duration;
-                var user = r.user;
-                var userPage = '<a href="https://www.youtube.com/user/' + user + '" target="_blank">' + user + '</a>';
-                $('<tr>').html('<td>' + getLinksButton(r.url) + '</td><td>' + url + '</td><td>' + title + '</td><td>' + duration + '</td><td>' + userPage + '</td>').appendTo('#tbl_result');
-            });
-        });
-    }
 
     $('#btn_search').click(function () {
         var keywords = $('#txt_keywords').val().trim();
@@ -109,6 +91,10 @@
 
 
     $("#btn_links").click(function () {
+
+        $('#main_results').hide();
+        $('#main_links').show();
+
         $("#btn_links").prop('disabled', true);
         $("#btn_links").text('Wait...');
 
@@ -173,6 +159,42 @@
         $('#txt_video_url').val(url);
         $('#btn_links').click();
     }
+
+    function submitSearch(keywords) {
+        var btn = $('#btn_search');
+        var tbl = $('#tbl_results');
+        if (btn.prop('disabled')) {
+            return; //busy
+        }
+
+        $('#main_results').show();
+        $('#main_links').hide();
+
+        btn.prop('disabled', true);
+        btn.text('Searching...');
+
+        tbl.empty();
+
+        search(keywords).done(function (results) {
+            btn.prop('disabled', false);
+            btn.text('Search');
+
+            log(results);
+
+            $.each(results, function (i, r) {
+                var thumb = '<img class="img-responsive" src="' + r.thumb + '" alt="' + r.title + '"/>';
+                var title = '<strong><a target="_blank" href="' + r.url + '">' + r.title + '</a></strong>';
+                var duration = ' - ' + r.duration;
+                var by = '<div class="small">by <a target="_blank" href="https://www.youtube.com/user/' + r.user + '">' + r.user + '</a></div>';
+                var views = '<div class="small">' + r.views.toLocaleString() + ' views</div>';
+                var btn = '<button class="btn btn-default" type="button" onclick="getLinks(\'' + r.url + '\')">Get Links</button>';
+                var html = thumb + title + duration + by + views + btn;
+                $('<div>').prop('class', 'col-xs-12 col-md-4 result-box').html(html).appendTo(tbl);
+            });
+        });
+    }
+
+    submitSearch('');
 </script>
 </body>
 </html>
