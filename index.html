@@ -48,12 +48,12 @@
 <body>
 <nav class="navbar navbar-inverse">
     <div class="container">
-        <a id="lnk_brand" class="navbar-brand" href="#">YouTube Links</a>
+        <a id="lnk_brand" class="navbar-brand" href="#">Free Music Video Downloader</a>
 
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a target="_blank" href="https://github.com/aldenml/yt-lnk">GitHub</a></li>
-                <li><a target="_blank" href="https://github.com/aldenml/yt-lnk/issues">Contact</a></li>
+                <!-- <li><a target="_blank" href="https://github.com/aldenml/yt-lnk">GitHub</a></li>
+                <li><a target="_blank" href="https://github.com/aldenml/yt-lnk/issues">Contact</a></li> -->
             </ul>
         </div>
     </div>
@@ -109,13 +109,20 @@
 
             log(results);
 
+            // always show multiples of 3.
+            if (results.length > 0) {
+                while (results.length % 3 != 0) {
+                    results.pop();
+                }
+            }
+
             $.each(results, function (i, r) {
-                var thumbnail = '<img class="img-responsive" src="' + r.thumbnail + '" alt="' + r.title + '"/>';
+                var thumbnail = '<a target="_blank" href="' + r.url + '"><img class="img-responsive" src="' + r.thumbnail + '" alt="' + r.title + '"/></a>';
                 var title = '<strong><a target="_blank" href="' + r.url + '">' + r.title + '</a></strong>';
                 var duration = ' - ' + r.duration;
                 var by = '<div class="small">by <a target="_blank" href="https://www.youtube.com/user/' + r.user + '">' + r.user + '</a></div>';
                 var views = '<div class="small">' + r.views.toLocaleString() + ' views</div>';
-                var btn = '<button class="btn btn-default" type="button" onclick="submitLinks(\'' + r.url + '\')">Get Links</button>';
+                var btn = '<button class="btn btn-default" type="button" onclick="submitLinks(\'' + r.url + '\')">Download Options</button>';
                 var html = thumbnail + title + duration + by + views + btn;
                 $('<div>').prop('class', 'col-xs-12 col-sm-6 col-md-4 result-box').html(html).appendTo(tbl);
             });
@@ -153,7 +160,7 @@
             }
 
             $.each(result.formats, function (i, fmt) {
-                var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                var lnk = '<a target="_blank" href="' + fmt.url + '" download>Download</a>';
                 var vlcLnk = mkVlc(fmt.url);
                 var ext = fmt.ext;
 
@@ -166,7 +173,7 @@
             });
 
             if (result.dash_manifest_url !== null) {
-                var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Link</a>';
+                var lnk = '<a target="_blank" href="' + result.dash_manifest_url + '" download>Download</a>';
                 var vlcLnk = mkVlc(result.dash_manifest_url);
                 var ext = 'mpd';
                 var info = 'DASH manifest';
@@ -177,7 +184,7 @@
             if (result.subtitles !== null) {
                 $.each(result.subtitles, function (i, lang) {
                     $.each(lang, function (j, fmt) {
-                        var lnk = '<a target="_blank" href="' + fmt.url + '" download>Link</a>';
+                        var lnk = '<a target="_blank" href="' + fmt.url + '" download>Download</a>';
                         var ext = fmt.ext;
                         var info = i + ' Subtitle';
 
@@ -220,7 +227,9 @@
 
     $('#btn_search').click(doSearch);
 
-    submitSearch('');
+    submitSearch('vevo');
 </script>
+<hr>
+Footer here.
 </body>
 </html>
